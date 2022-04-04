@@ -294,5 +294,5 @@ mongodbEnabled: true
 #if using provided mongodb
 mongodbPassword: "myTestPass"
 # if using external mongodb
-externalMongodbConnectionString: "my://mongodb:conntion@string"
+externalMongodbConnectionString: "my://mongodb:connection@string"
 customerApiUrl: "customer-api.my.domain.com"
