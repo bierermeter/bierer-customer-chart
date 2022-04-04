@@ -13,7 +13,7 @@
 ## Installing the chart
 - Create a namespace for the Customer API
 - Install the chart
-  - helm install customer-api . --values values.yaml  -n helm-testing **Update this for remote helm repo**
+  - helm install customer-api -n helm-testing **Update this for remote helm repo**
  
  Configuration values:
  
@@ -39,4 +39,12 @@ For example `helm install customer-api . --values values.yaml  -n helm-testing -
 - Couchdb App
 - Couchdb Dashboard
 - Mongodb (optional)
+
+
+## Upgrading the chart
+  - `helm upgrade customer-api -n helm-testing` **Update this for remote helm repo**
+
+## Deleting the chart
+  - `helm delete customer-api -n helm-testing` **Update this for remote helm repo**
+
 
