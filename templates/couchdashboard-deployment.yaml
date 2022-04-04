@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "couchDashboard.fullname" . }}
+  labels:
+    {{- include "couchDashboard.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.couchDashboard.autoscaling.enabled }}
+  replicas: {{ .Values.couchDashboard.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "couchDashboard.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.couchDashboard.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "couchDashboard.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.couchDashboard.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "couchDashboard.serviceAccountName" . }}
+      securityContext:
+        fsGroup: 200
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext: {}
+          env:
+            - name: COUCHDB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: couchdb-creds
+                  optional: false
+            - name: COUCHDB_PORT_NUMBER
+              value: "{{ .Values.couchDashboard.COUCHDB_PORT_NUMBER }}"
+            - name: COUCHDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: couchdb-creds
+                  optional: false
+          image: "{{ .Values.couchDashboard.image.repository }}:{{ .Values.couchDashboard.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.couchDashboard.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 7984
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.couchDashboard.resources | nindent 12 }}
+          volumeMounts:
+          - mountPath: /bitnami/couchdb/
+            name: couchdashboard
+      {{- with .Values.couchDashboard.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.couchDashboard.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.couchDashboard.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - name: couchdashboard
+        persistentVolumeClaim:
+          claimName: couchdashboard

@@ -1,0 +1,298 @@
+customerApi:
+  replicaCount: 1
+
+  image:
+    repository: bierer/bierer-customer-api
+    pullPolicy: Always
+    tag: development
+
+  imagePullSecrets:
+    - name: docker-hub-creds
+  nameOverride: ""
+  fullnameOverride: ""
+
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+
+  securityContext: {}
+
+  service:
+    type: ClusterIP
+    port: 3000
+
+  ingress:
+    enabled: true
+    className: ""
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-production
+    hosts:
+      - host: customer-api.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+     - secretName: customer-api-tls
+       hosts:
+         - customer-api.local
+
+  resources: {}
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+
+  PORT: 3000
+  SCOPE_API_IDENTIFIER: default
+  CUSTOMER_IDENTIFIER: testGroup
+  COUCH_WRITE_URL: "http://customer-api-couchapp:7984"
+  COUCH_READ_URL: "http://customer-api-couchdashboard:7984"
+
+integrationService:
+  replicaCount: 1
+  image:
+    repository: bierer/bierer-integration
+    pullPolicy: Always
+    tag: latest
+
+  imagePullSecrets:
+    - name: docker-hub-creds
+  nameOverride: ""
+  fullnameOverride: ""
+
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+
+  securityContext: {}
+
+  service:
+    type: ClusterIP
+    port: 8083
+
+  ingress:
+    enabled: true
+    className: ""
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    hosts:
+      - host: integration-service.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+
+  resources: {}
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+  CUSTOMER_API_URL: "http://customer-api:3000"
+  PORT: "8083"
+
+couchApp:
+  replicaCount: 1
+
+  image:
+    repository: bitnami/couchdb
+    pullPolicy: Always
+    tag: latest
+
+  imagePullSecrets:
+    - name: docker-hub-creds
+  nameOverride: ""
+  fullnameOverride: ""
+
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+
+  securityContext: {}
+
+  service:
+    type: LoadBalancer
+    port: 7984
+
+  ingress:
+    enabled: true
+    className: ""
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    hosts:
+      - host: couchapp.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+
+  resources: {}
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  COUCHDB_PORT_NUMBER: "7984"
+
+couchDashboard:
+  replicaCount: 1
+
+  image:
+    repository: bitnami/couchdb
+    pullPolicy: Always
+    tag: latest
+
+  imagePullSecrets:
+    - name: docker-hub-creds
+  nameOverride: ""
+  fullnameOverride: ""
+
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+
+  securityContext: {}
+
+  service:
+    type: LoadBalancer
+    port: 7984
+
+  ingress:
+    enabled: true
+    className: ""
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    hosts:
+      - host: couchdashboard.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+
+  resources: {}
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  COUCHDB_PORT_NUMBER: "7984"
+
+mongodb:
+  replicaCount: 1
+
+  image:
+    repository: bitnami/mongodb
+    pullPolicy: Always
+    tag: 4.4.13-debian-10-r0
+
+  imagePullSecrets:
+    - name: docker-hub-creds
+  nameOverride: ""
+  fullnameOverride: ""
+
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+
+  securityContext: {}
+
+  service:
+    type: LoadBalancer
+    port: 27017
+
+  ingress:
+    enabled: true
+    className: ""
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    hosts:
+      - host: mongodb.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+
+  resources: {}
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+
+
+# These values need to be updated
+storageClassName: myStorageClassName
+mongodbStorageSize: "1Gi"
+couchdbStorageSize: "1Gi"
+mongodbEnabled: true
+#if using provided mongodb
+mongodbPassword: "myTestPass"
+# if using external mongodb
+externalMongodbConnectionString: "my://mongodb:conntion@string"
+customerApiUrl: "customer-api.my.domain.com"

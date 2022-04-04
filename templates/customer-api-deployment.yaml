@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "customerApi.fullname" . }}
+  labels:
+    {{- include "customerApi.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.customerApi.autoscaling.enabled }}
+  replicas: {{ .Values.customerApi.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "customerApi.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.customerApi.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "customerApi.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.customerApi.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "customerApi.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.customerApi.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.customerApi.securityContext | nindent 12 }}
+          env:
+            - name: SCOPE_API_IDENTIFIER
+              value: "{{ .Values.customerApi.SCOPE_API_IDENTIFIER }}"
+            - name: PORT
+              value: "{{ .Values.customerApi.PORT }}"
+            - name: MONGO_CONNECTION_STRINGS
+              value: {{ include "mongodb.connectionString" . }}
+            - name: CUSTOMER_IDENTIFIER
+              value: "{{ .Values.customerApi.CUSTOMER_IDENTIFIER }}"
+            - name: COUCH_WRITE_URL
+              value: "{{ .Values.customerApi.COUCH_WRITE_URL }}"
+            - name: COUCH_READ_URL
+              value: "{{ .Values.customerApi.COUCH_READ_URL }}"
+            - name: COUCH_USERNAME
+              valueFrom:
+                  secretKeyRef:
+                    key: username
+                    name: couchdb-creds
+                    optional: false
+            - name: COUCH_PASSWORD
+              valueFrom:
+                  secretKeyRef:
+                    key: password
+                    name: couchdb-creds
+                    optional: false
+          image: "{{ .Values.customerApi.image.repository }}:{{ .Values.customerApi.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.customerApi.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.customerApi.resources | nindent 12 }}
+      {{- with .Values.customerApi.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.customerApi.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.customerApi.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

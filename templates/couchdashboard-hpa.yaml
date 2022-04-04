@@ -1,0 +1,28 @@
+{{- if .Values.couchDashboard.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "couchDashboard.fullname" . }}
+  labels:
+    {{- include "couchDashboard.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "couchDashboard.fullname" . }}
+  minReplicas: {{ .Values.couchDashboard.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.couchDashboard.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.couchDashboard.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.couchDashboard.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.couchDashboard.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.couchDashboard.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}

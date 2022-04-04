@@ -1,0 +1,18 @@
+{{- if .Values.mongodbEnabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    "helm.sh/resource-policy": keep
+  name: mongodb
+  labels:
+    app: acs
+    reference: helm-testing
+spec:
+  storageClassName: "{{ .Values.storageClassName }}"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "{{ .Values.mongodbStorageSize }}"
+{{- end }}

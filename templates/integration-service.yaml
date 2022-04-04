@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "integrationService.fullname" . }}
+  labels:
+    {{- include "integrationService.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.integrationService.service.type }}
+  ports:
+    - port: {{ .Values.integrationService.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "integrationService.selectorLabels" . | nindent 4 }}

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "couchApp.fullname" . }}
+  labels:
+    {{- include "couchApp.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.couchApp.service.type }}
+  ports:
+    - port: {{ .Values.couchApp.service.port }}
+      targetPort: {{ .Values.couchApp.service.port }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "couchApp.selectorLabels" . | nindent 4 }}

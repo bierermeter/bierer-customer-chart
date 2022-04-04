@@ -1,0 +1,18 @@
+{{- if .Values.mongodbEnabled }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mongodb.fullname" . }}
+  labels:
+    {{- include "mongodb.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.mongodb.service.type }}
+  ports:
+    - port: {{ .Values.mongodb.service.port }}
+      targetPort: {{ .Values.mongodb.service.port }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "mongodb.selectorLabels" . | nindent 4 }}
+{{- end }}

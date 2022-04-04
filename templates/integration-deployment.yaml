@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "integrationService.fullname" . }}
+  labels:
+    {{- include "integrationService.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.integrationService.autoscaling.enabled }}
+  replicas: {{ .Values.integrationService.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "integrationService.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.integrationService.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "integrationService.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.integrationService.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "integrationService.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.integrationService.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.integrationService.securityContext | nindent 12 }}
+          env:
+            - name: CUSTOMER_API_URL
+              value: "{{ .Values.integrationService.CUSTOMER_API_URL }}"
+            - name: MONGO_CONNECTION_STRINGS
+              value: {{ include "mongodb.connectionString" . }}
+            - name: PORT
+              value: "{{ .Values.integrationService.PORT }}"
+          image: "{{ .Values.integrationService.image.repository }}:{{ .Values.integrationService.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.integrationService.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8083
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.integrationService.resources | nindent 12 }}
+      {{- with .Values.integrationService.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.integrationService.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.integrationService.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "couchApp.fullname" . }}
+  labels:
+    {{- include "couchApp.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.couchApp.autoscaling.enabled }}
+  replicas: {{ .Values.couchApp.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "couchApp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.couchApp.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "couchApp.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.couchApp.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "couchApp.serviceAccountName" . }}
+      securityContext:
+        fsGroup: 200
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext: {}
+          env:
+            - name: COUCHDB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: couchdb-creds
+                  optional: false
+            - name: COUCHDB_PORT_NUMBER
+              value: "{{ .Values.couchApp.COUCHDB_PORT_NUMBER }}"
+            - name: COUCHDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: couchdb-creds
+                  optional: false
+          image: "{{ .Values.couchApp.image.repository }}:{{ .Values.couchApp.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.couchApp.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 7984
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.couchApp.resources | nindent 12 }}
+          volumeMounts:
+          - mountPath: /bitnami/couchdb/
+            name: couchapp
+      {{- with .Values.couchApp.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.couchApp.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.couchApp.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - name: couchapp
+        persistentVolumeClaim:
+          claimName: couchapp

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "customerApi.fullname" . }}
+  labels:
+    {{- include "customerApi.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.customerApi.service.type }}
+  ports:
+    - port: {{ .Values.customerApi.service.port }}
+      targetPort: {{ .Values.customerApi.service.port }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "customerApi.selectorLabels" . | nindent 4 }}
