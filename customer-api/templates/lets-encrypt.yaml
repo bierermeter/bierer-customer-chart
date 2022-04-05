@@ -1,10 +1,7 @@
-{{- $defined := (lookup "v1" "ClusterIssuer" .Release.Namespace "letsencrypt-production") }}
-{{- if not $defined }}
-
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-production
+  name: {{- printf "letsencrypt-production-%s" .Release.Namespace }}
 spec:
   acme:
     # You must replace this email address with your own.
@@ -20,4 +17,3 @@ spec:
     - http01:
         ingress:
           class: nginx
-{{- end -}}
