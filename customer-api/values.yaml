@@ -31,7 +31,6 @@ customerApi:
     className: ""
     annotations:
       kubernetes.io/ingress.class: nginx
-      cert-manager.io/cluster-issuer: letsencrypt-production
     hosts:
       - host: customer-api.local
         paths:
