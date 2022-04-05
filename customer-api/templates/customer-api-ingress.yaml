@@ -20,6 +20,7 @@ metadata:
     {{- include "customerApi.labels" . | nindent 4 }}
   {{- with .Values.customerApi.ingress.annotations }}
   annotations:
+    cert-manager.io/cluster-issuer: "{{- printf "letsencrypt-production-%s" $.Release.Namespace  | trimSuffix "-" }}"
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
