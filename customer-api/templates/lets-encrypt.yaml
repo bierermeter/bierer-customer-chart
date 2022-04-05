@@ -1,3 +1,6 @@
+{{- $defined := (lookup "v1" "ClusterIssuer" .Release.Namespace "letsencrypt-production") }}
+{{- if not $defined }}
+
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
@@ -17,3 +20,4 @@ spec:
     - http01:
         ingress:
           class: nginx
+{{- end -}}
