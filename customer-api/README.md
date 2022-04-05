@@ -12,8 +12,10 @@
 
 ## Installing the chart
 - Create a namespace for the Customer API
+- Add chart repo
+  - `helm repo add customer-api https://bierermeter.github.io/bierer-customer-chart/`
 - Install the chart
-  - helm install customer-api -n customer-api-namespace **Update this for remote helm repo**
+  - `helm install customer-api customer-api/customer-api -n customer-api-namespace --set storageClassName="storageclass" --set customerApiUrl="my.domain.com" --set couchdbStorageSize="1Gi" --set mongodbStorageSize="1Gi" --set mongodbEnabled=true`
  
  Configuration values:
  
@@ -29,8 +31,6 @@
 
 
 To set these values use `--set variableName=desiredValue`
-
-For example `helm install customer-api . --values values.yaml  -n helm-testing --set customerApiUrl=my-new-api-url.com`
 
 ## Services Included
 - Customer API
