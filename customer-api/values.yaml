@@ -90,7 +90,7 @@ integrationService:
     port: 8083
 
   ingress:
-    enabled: true
+    enabled: false
     className: ""
     annotations:
       kubernetes.io/ingress.class: nginx
@@ -146,7 +146,7 @@ couchApp:
     port: 7984
 
   ingress:
-    enabled: true
+    enabled: false
     className: ""
     annotations:
       kubernetes.io/ingress.class: nginx
@@ -202,7 +202,7 @@ couchDashboard:
     port: 7984
 
   ingress:
-    enabled: true
+    enabled: false
     className: ""
     annotations:
       kubernetes.io/ingress.class: nginx
@@ -258,7 +258,7 @@ mongodb:
     port: 27017
 
   ingress:
-    enabled: true
+    enabled: false
     className: ""
     annotations:
       kubernetes.io/ingress.class: nginx
