@@ -6,6 +6,7 @@
 - Helm 3+
 - On your cluster you will need to create a Storage Class
   - https://kubernetes.io/docs/concepts/storage/storage-classes/ 
+
 - On your cluster you will need to install the following Helm charts
   - External DNS: https://bitnami.com/stack/external-dns/helm 
   - Nginx Ingress: https://kubernetes.github.io/ingress-nginx/deploy/ 
