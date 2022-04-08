@@ -254,7 +254,7 @@ mongodb:
   securityContext: {}
 
   service:
-    type: LoadBalancer
+    type: ClusterIP
     port: 27017
 
   ingress:
@@ -287,11 +287,11 @@ mongodb:
 
 # These values need to be updated
 storageClassName: myStorageClassName
-mongodbStorageSize: "1Gi"
-couchdbStorageSize: "1Gi"
+mongodbStorageSize: "8Gi"
+couchdbStorageSize: "8Gi"
 mongodbEnabled: true
 #if using provided mongodb
 mongodbPassword: "myTestPass"
 # if using external mongodb
 externalMongodbConnectionString: "my://mongodb:connection@string"
-customerApiUrl: "customer-api.my.domain.com"
+customerApiUrl: "test-customerapi.bierermeters.app"
