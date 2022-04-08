@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  customer-api:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-04-08T14:26:15.515369882-04:00"
+    description: A Helm chart for the Bierer Customer API
+    digest: a4611af1eaf385012cc0bc7b6d7798e16b21457341832112f1cef296487f2386
+    name: customer-api
+    type: application
+    urls:
+    - customer-api-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-04-08T14:26:15.513329473-04:00"
