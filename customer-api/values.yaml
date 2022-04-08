@@ -286,7 +286,7 @@ mongodb:
 
 
 # These values need to be updated
-storageClassName: "helm-test-storageclass" #myStorageClassName
+storageClassName: myStorageClassName
 mongodbStorageSize: "8Gi"
 couchdbStorageSize: "8Gi"
 mongodbEnabled: true
