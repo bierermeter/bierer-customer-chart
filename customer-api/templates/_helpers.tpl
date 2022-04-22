@@ -353,3 +353,8 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
+
+
+{{- define "integrationService.pollingCommand" -}}
+{{- printf "while true; do curl -X GET %s -H  'accept: application/json' --max-time 30; date; sleep 10; done"  (include "integrationService.fullname" . | quote) }}
+{{- end }}

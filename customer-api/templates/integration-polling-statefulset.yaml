@@ -20,7 +20,7 @@ spec:
             - /bin/sh
           args:
           - -ec
-          - 'while true; do curl -X GET "http://customer-api-integration-service:8083/recordingsSync" -H  "accept: application/json" --max-time 30; date; sleep 10; done'
+          - {{ include "integrationService.pollingCommand" . | quote}}
           securityContext:
             {{- toYaml .Values.couchApp.securityContext | nindent 12 }}
           image: "buildpack-deps:curl"
