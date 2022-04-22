@@ -33,7 +33,7 @@ spec:
             {{- toYaml .Values.integrationService.securityContext | nindent 12 }}
           env:
             - name: CUSTOMER_API_URL
-              value: "{{ .Values.integrationService.CUSTOMER_API_URL }}"
+              value: {{ include "customerapi.url" . }}
             - name: MONGO_CONNECTION_STRINGS
               value: {{ include "mongodb.connectionString" . }}
             - name: PORT

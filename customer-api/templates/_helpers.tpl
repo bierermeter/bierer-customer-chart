@@ -361,3 +361,9 @@ Create the name of the service account to use
 
 {{- printf "while true; do curl -X GET %s -H  %s --max-time 30; date; sleep 10; done"  ($url | quote) ("accept: application/json" | quote)}}
 {{- end }}
+
+
+{{- define "customerapi.url" -}}
+
+{{- printf "http://%s:3000"  (include "customerApi.fullname" .) }}
+{{- end }}
