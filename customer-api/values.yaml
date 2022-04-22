@@ -294,4 +294,4 @@ mongodbEnabled: true
 mongodbPassword: "myTestPass"
 # if using external mongodb
 externalMongodbConnectionString: "my://mongodb:connection@string"
-customerApiUrl: "test-customerapi.bierermeters.app"
+customerApiUrl: "test-customerapi.my.domain"

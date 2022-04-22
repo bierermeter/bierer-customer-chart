@@ -353,3 +353,28 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
+
+
+{{- define "integrationService.pollingCommand" -}}
+
+{{- $url := printf "%s:8083/recordingsSync" (include "integrationService.fullname" .) }}
+
+{{- printf "while true; do curl -X GET %s -H  %s --max-time 30; date; sleep 10; done"  ($url | quote) ("accept: application/json" | quote)}}
+{{- end }}
+
+
+{{- define "customerapi.url" -}}
+
+{{- printf "http://%s:3000"  (include "customerApi.fullname" .) }}
+{{- end }}
+
+
+{{- define "couchApp.url" -}}
+
+{{- printf "http://%s:7984"  (include "couchApp.fullname" .) }}
+{{- end }}
+
+{{- define "couchDashboard.url" -}}
+
+{{- printf "http://%s:7984"  (include "couchDashboard.fullname" .) }}
+{{- end }}
