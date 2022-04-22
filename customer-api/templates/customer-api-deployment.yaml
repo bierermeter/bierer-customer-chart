@@ -41,9 +41,9 @@ spec:
             - name: CUSTOMER_IDENTIFIER
               value: "{{ .Values.customerApi.CUSTOMER_IDENTIFIER }}"
             - name: COUCH_WRITE_URL
-              value: "{{ .Values.customerApi.COUCH_WRITE_URL }}"
+              value: {{ include "couchApp.url" . }}
             - name: COUCH_READ_URL
-              value: "{{ .Values.customerApi.COUCH_READ_URL }}"
+              value: {{ include "couchDashboard.url" . }}
             - name: COUCH_USERNAME
               valueFrom:
                   secretKeyRef:

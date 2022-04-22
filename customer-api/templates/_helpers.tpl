@@ -367,3 +367,14 @@ Create the name of the service account to use
 
 {{- printf "http://%s:3000"  (include "customerApi.fullname" .) }}
 {{- end }}
+
+
+{{- define "couchApp.url" -}}
+
+{{- printf "http://%s:7984"  (include "couchApp.fullname" .) }}
+{{- end }}
+
+{{- define "couchDashboard.url" -}}
+
+{{- printf "http://%s:7984"  (include "couchDashboard.fullname" .) }}
+{{- end }}
