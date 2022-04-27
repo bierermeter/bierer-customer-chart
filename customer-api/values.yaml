@@ -4,7 +4,7 @@ customerApi:
   image:
     repository: bierer/bierer-customer-api
     pullPolicy: Always
-    tag: development
+    tag: production
 
   imagePullSecrets:
     - name: docker-hub-creds
@@ -67,7 +67,7 @@ integrationService:
   image:
     repository: bierer/bierer-integration
     pullPolicy: Always
-    tag: latest
+    tag: production
 
   imagePullSecrets:
     - name: docker-hub-creds
