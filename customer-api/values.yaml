@@ -67,7 +67,7 @@ integrationService:
   image:
     repository: bierer/bierer-integration
     pullPolicy: Always
-    tag: production
+    tag: latest
 
   imagePullSecrets:
     - name: docker-hub-creds
