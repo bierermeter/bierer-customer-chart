@@ -56,6 +56,14 @@ spec:
                     key: password
                     name: couchdb-creds
                     optional: false
+            - name: AUTH0_JWT_ALGORITHM
+              value: "RS256"
+            - name: AUTH0_JWT_AUDIENCE
+              value: "https://central-api.bierermeters.app"
+            - name: AUTH0_JWT_ISSUER
+              value: "https://login.bierermeters.app/"
+            - name: AUTH0_JWT_JWKS
+              value: "https://bierer.us.auth0.com/.well-known/jwks.json"
           image: "{{ .Values.customerApi.image.repository }}:{{ .Values.customerApi.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.customerApi.image.pullPolicy }}
           ports:
